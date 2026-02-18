@@ -2,7 +2,7 @@ import { Elysia} from "elysia"
 import { AuthModel } from "./types"
 import { Auth } from "./store"
 
-export const app = new Elysia({prefix : "auth"})
+export const app = new Elysia({prefix : "auth"}) // /auth is prefix of both signup and signin
     .post("/signup", async ({ body }) =>{
         const userId = await Auth.signUp(body);
         return {
@@ -15,6 +15,14 @@ export const app = new Elysia({prefix : "auth"})
             400 : AuthModel.signUpReponseFailed
         }
     })
-    .post("/signin",({body})=>{
-
+    .post("/signin",async ({body})=>{
+        const token = await Auth.signIn(body)
+        return {
+            token
+        }
+    }, {
+        response : {
+            200 : AuthModel.signInResponse,
+            400 : AuthModel.signInResponseFailed
+        }
     })

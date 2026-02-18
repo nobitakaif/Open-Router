@@ -13,7 +13,7 @@ export namespace AuthModel{
         id : t.String()
     })
     export const signUpReponseFailed = t.object({
-        msg : "Error while signup "
+        msg : t.Literal("Error while sign up ")
     })
     export type signUpReponseFailed = typeof signUpReponseFailed.static
     export type signUpRespose = typeof signUpRespose.static
@@ -27,5 +27,9 @@ export namespace AuthModel{
     export const signInResponse = t.object({
         token : t.String()
     })
+    export const signInResponseFailed = t.object({
+        message : t.Literal("Incorrect credentials")
+    })
+    export type signInResponseFailed = typeof signInResponseFailed.static
     export type signInResponse = typeof signInResponse.static
 }
