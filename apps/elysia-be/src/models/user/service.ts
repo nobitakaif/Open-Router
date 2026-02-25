@@ -7,24 +7,27 @@ import { prisma } from "@repo/db";
 type Response = {
     status : 400 | 200,
     msg? : string
-    token? : string
+    token? : string,
+    id? : string
 }
 
 export abstract class Auth{
     static async signup({email, password } : AuthModel.SignupSchemaType): Promise<AuthModel.SignupResponseType | Response>{
-        const response = await prisma.user.create({
-            data :{
-                email : email,
-                password : await Bun.password.hash(password,{algorithm : "bcrypt", cost : 10})
-            }
-        })
-        if (response.id){
+        try{
+            const response = await prisma.user.create({
+                data :{
+                    email : email,
+                    password : await Bun.password.hash(password,{algorithm : "bcrypt", cost : 10})
+                }
+            })
+            
+                return {
+                    id : response.id
+                }
+            
+        }catch(e){
             return {
-                id : response.id
-            }
-        }else{
-            return {
-                status : 400,
+                status : 400, 
                 msg : "this email is already taken!"
             }
         }
@@ -37,11 +40,12 @@ export abstract class Auth{
             }
         })
         if(resposne?.id){
-            const verify =  await Bun.password.verify(password, resposne.password)
-            if(verify) {
+            const verifyPassword =  await Bun.password.verify(password, resposne.password)
+            
+            if(verifyPassword) {
                 return {
                     status : 200,
-                    token : "token-123"
+                    id : resposne.id
                 }
             }
             else{

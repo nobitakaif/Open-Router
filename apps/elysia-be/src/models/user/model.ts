@@ -6,10 +6,10 @@ export namespace AuthModel {
         password : t.String()
     })
     export type SigninSchemaType = typeof signinSchema.static
-    export const singinResponse = t.Object({
+    export const signinResponse = t.Object({
         token : t.String()
     })
-    export type SigninResponseType = typeof singinResponse.static
+    export type SigninResponseType = typeof signinResponse.static
 
     export const signupSchema = t.Object({
         email : t.String(),
