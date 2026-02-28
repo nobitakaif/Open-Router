@@ -13,10 +13,15 @@ export namespace ApiKeyModel {
     export type CreateApiKeyResposne = typeof createApiKeyResponse.static
 
     export const disableApiKeySchema = t.Object({
-        id  : t.String()
+        apiKey  : t.String()
     })
     export type DisableApiKeySchema = typeof disableApiKeySchema.static
 
+    export const disableApiKeyResponseFailed = t.Object({
+        msg : t.Literal("Disabled api-key unsuccessfull")
+    })
+    export type DisableApiKeyResponseFailed = typeof disableApiKeyResponseFailed.static
+    
     export const disableApiKeyResponse = t.Object({
         msg : t.Literal("Disabled api key successfully 🙂")
     })
@@ -24,10 +29,7 @@ export namespace ApiKeyModel {
 
     export const getApiKeysResponse = t.Object({
         apiKeys : t.Array(t.Object({
-            name : t.String(),
-            apiKey : t.String(),
-            lastUsed : t.String(),
-            creditUsed : t.String()
+            id : t.String(),
         }))
 
     })
@@ -37,4 +39,9 @@ export namespace ApiKeyModel {
         msg : t.Literal("Deleted ApiKey successfully ")
     })
     export type DeleteApiKeyResponse = typeof deletedApiKeyResposne.static
+
+    export const deletedApiKeyFailedResposne = t.Object({
+        msg : t.Literal("Deleted ApiKey unsuccessfull")
+    })
+    export type DeletedApiKeyFailedResposne = typeof deletedApiKeyFailedResposne.static
 }
