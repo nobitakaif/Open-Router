@@ -8,6 +8,9 @@ export abstract class ApiKey{
         apikey : string
     }>{
         const apiKey = generateApiKey()
+        // if user has already same name key but previous one is deleted true then we should able to create new one, 
+        // in this case if user has already same name key but it is deleted true then we're not able to create new one
+        // #### TODO fix this 
         const resposneApiKey = await prisma.apiKey.create({
             data:{
                 name : name,

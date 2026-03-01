@@ -33,7 +33,7 @@ export const app = new Elysia({prefix : "/api-keys"})
     .post("/create", async ({userId,body})=>{
         console.log(userId)
         const { name } = body
-        const {apikey,id} = await ApiKey.createApiKey(name, userId)
+        const {apikey,id} = await ApiKey.createApiKey(name, userId) // if key is deleted false then we should able to create a new key fix it 
         
         return status(200,{
             id,
@@ -50,7 +50,7 @@ export const app = new Elysia({prefix : "/api-keys"})
         console.log(keys)
         
         return status(200, {
-            apiKeys : keys
+            apiKeys  : keys
         })
         
     },{

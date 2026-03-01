@@ -30,6 +30,10 @@ export namespace ApiKeyModel {
     export const getApiKeysResponse = t.Object({
         apiKeys : t.Array(t.Object({
             id : t.String(),
+            apikey : t.String(),
+            name : t.String(),
+            lastUsed : t.Nullable(t.Date()),
+            creditUsed : t.Number()
         }))
 
     })

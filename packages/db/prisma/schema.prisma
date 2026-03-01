@@ -43,6 +43,7 @@ model Model{
   id                      String  @id   @default(uuid())
   name                    String
   companyId               String
+  slug                    String
   company                 Company     @relation(fields: [companyId], references: [id])
   modelProviderMapping    ModelProviderMapping[]
 }
