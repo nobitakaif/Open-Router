@@ -7,7 +7,7 @@ const app = new Elysia({prefix : "/models"})
     .get("/get", async () =>{
         const model = await ModelService.getModels()
         return status(200,{
-            models : model  
+            models : model
         })
     },{
         response : {
@@ -17,7 +17,7 @@ const app = new Elysia({prefix : "/models"})
     .get("/providers", async ()=>{
         const provider = await ModelService.getProvider();
         return {
-            provider :""
+            provider : provider
         }
     },{
         response : {
@@ -27,7 +27,7 @@ const app = new Elysia({prefix : "/models"})
     .get("/:id/providers", async ({params : {id}})=>{
         const provider = await ModelService.getModelProvider(id)
         return {
-            provider
+            provider 
         }
     },{
         response : {

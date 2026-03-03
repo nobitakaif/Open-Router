@@ -30,6 +30,21 @@ export abstract class ModelService{
     }
 
     static async getModelProvider(id : string){
-
+        const mappings = await prisma.modelProviderMapping.findMany({
+            where : {
+                modelId : id
+            },
+            include : {
+                provider : true
+            }
+        })
+        return mappings.map( m => ({
+            id : m.id,
+            providerId : m.provider.id,
+            providerName : m.provider.name,
+            providerWebsite : m.provider.website,
+            inputTokenCost : m.inputTokenCost,
+            outputTokenCost : m.outputTokenCost
+        }))
     }
 }
