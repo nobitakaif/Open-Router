@@ -13,7 +13,8 @@ export namespace ApiKeyModel {
     export type CreateApiKeyResposne = typeof createApiKeyResponse.static
 
     export const disableApiKeySchema = t.Object({
-        apiKey  : t.String()
+        apiKey  : t.String(),
+
     })
     export type DisableApiKeySchema = typeof disableApiKeySchema.static
 
@@ -33,7 +34,8 @@ export namespace ApiKeyModel {
             apikey : t.String(),
             name : t.String(),
             lastUsed : t.Nullable(t.Date()),
-            creditUsed : t.Number()
+            creditUsed : t.Number(),
+            disbaled : t.Boolean()
         }))
 
     })

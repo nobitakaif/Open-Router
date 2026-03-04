@@ -5,7 +5,7 @@ export abstract class ModelService{
     static async  getModels(){
         const models = await prisma.model.findMany({
             include : {
-                company : true
+                company : true,
             }
         })
         return models.map(m =>({

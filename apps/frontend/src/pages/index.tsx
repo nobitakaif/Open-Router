@@ -1,7 +1,7 @@
 
 
 export default function Home(){
-    return <div>
+    return <div className="bg-red-400 h-screen w-full text-2xl">
         Home page
     </div>
 }

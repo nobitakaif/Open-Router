@@ -28,7 +28,7 @@ export abstract class ApiKey{
         const allKeys = await prisma.apiKey.findMany({
             where : {
                 userId,
-                deleted : false
+                deleted : false,
             }
         })
         return allKeys.map(key => ({
@@ -36,7 +36,8 @@ export abstract class ApiKey{
                 apikey : key.apiKey,
                 name : key.name,
                 lastUsed : key.lastUsed,
-                creditUsed : key.creditconsumed 
+                creditUsed : key.creditconsumed,
+                disbaled : key.disable
         }))
     }
 
@@ -46,8 +47,9 @@ export abstract class ApiKey{
             const keyId = await prisma.apiKey.findFirst({
                 where : {
                     apiKey,
-                    userId
-                }
+                    userId,
+                },
+                
             })
             console.log("get id -> ", keyId?.id)
             if(!keyId?.id){

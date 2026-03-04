@@ -4,7 +4,7 @@ import { ModelsModel } from "./models";
 
 
 export const app = new Elysia({prefix : "/models"})
-    .get("/get", async () =>{
+    .get("/", async () =>{
         const model = await ModelService.getModels()
         return status(200,{
             models : model

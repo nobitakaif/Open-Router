@@ -58,7 +58,7 @@ export const app = new Elysia({prefix : "/api-keys"})
             200 : ApiKeyModel.getApiKeysResponse
         }
     })
-    .post("/disable", async ({ userId, body })=>{
+    .put("/", async ({ userId, body })=>{
         const { apiKey } = body
         const { success,msg } = await ApiKey.disableKey(apiKey, userId)
         if(success){
