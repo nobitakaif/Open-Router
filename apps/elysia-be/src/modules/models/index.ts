@@ -3,7 +3,7 @@ import { ModelService } from "./service";
 import { ModelsModel } from "./models";
 
 
-const app = new Elysia({prefix : "/models"})
+export const app = new Elysia({prefix : "/models"})
     .get("/get", async () =>{
         const model = await ModelService.getModels()
         return status(200,{
