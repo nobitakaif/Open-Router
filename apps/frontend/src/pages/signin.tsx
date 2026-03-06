@@ -29,6 +29,7 @@ export function Signin() {
             email: string;
             password: string;
         }) => {
+            
             const response = await elysiaClient.auth.signin.post({
                 email,
                 password,

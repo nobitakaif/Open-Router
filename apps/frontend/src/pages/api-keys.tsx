@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useElysiaClient } from "@/providers/edenProvider";
 import { DashboardLayout } from "@/components/dashboardLayout";
@@ -33,6 +33,7 @@ export function ApiKeys() {
     const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [revealedKeys, setRevealedKeys] = useState<Set<string>>(new Set());
+    const [getApi, setApikey] = useState<any>()
 
     const apiKeysQuery = useQuery({
         queryKey: ["api-keys"],
@@ -46,19 +47,43 @@ export function ApiKeys() {
     const createMutation = useMutation({
         mutationFn: async (name: string) => {
         const response = await elysiaClient["api-keys"].create.post({name : name})
-            console.log(response.data?.apikey.slice(0,12).repeat(8))
+            console.log(response.data)
+            
             if (response.error) {
                 const errValue = response.error.value as { message?: string } | undefined;
                 throw new Error(errValue?.message || "Failed to create API key");
             }
+            setNewlyCreatedKey(response.data.id)
             return response.data;
         },
         onSuccess: (data:any) => {
-            setNewlyCreatedKey(data?.apiKey ?? null);
+            console.log("new created key -> ",data.id)
+            setNewlyCreatedKey(data.apiKey);
+            console.log("newly created key ", newlyCreatedKey)
             if (nameRef.current) nameRef.current.value = "";
             queryClient.invalidateQueries({ queryKey: ["api-keys"] });
         },
     });
+
+    const getAllApiKey = useMutation({
+        mutationFn : async() =>{
+            const res = await elysiaClient["api-keys"].get()
+            if(res.error){
+                throw new Error ("something happen wrong -> ", )
+            }
+            console.log("all api key -> ", res.data?.apiKeys)
+            return res.data
+        },
+        onSuccess:(data:any)=>{
+            setApikey(data.apiKey)
+            console.log("success data api key ",data.apiKey)
+            console.log(apiKeys)
+        }
+    })
+
+    useEffect(()=>{
+        console.log("mount new created key -> ", newlyCreatedKey)
+    },[])
 
     const toggleMutation = useMutation({
         mutationFn: async ({ id, disabled }: { id: string; disabled: boolean }) => {
@@ -225,9 +250,9 @@ export function ApiKeys() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="rounded-xl border border-border/50 bg-card/30 overflow-hidden">
-                            <table className="w-full text-sm">
-                                <thead>
+                       <div className="rounded-xl border border-border/50 bg-card/30 overflow-hidden">
+                           <table className="w-full text-sm">
+                            <thead>
                                     <tr className="border-b border-border/50">
                                         <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Name</th>
                                         <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Key</th>
@@ -236,21 +261,22 @@ export function ApiKeys() {
                                         <th className="text-right px-4 py-3 text-xs font-medium text-muted-foreground">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {apiKeys.map((key:any) => (
+                                
+                                    <tbody>
+                                    {apiKeys.map((key) => (
                                         <tr key={key.id} className="border-b border-border/30 last:border-0 group">
-                                            <td className="px-4 py-3 font-medium text-white">{key.name}</td>
+                                            <td className="px-4 py-3 font-medium">{key.name}</td>
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-1.5">
                                                     <code className="font-mono text-xs text-muted-foreground">
-                                                        {revealedKeys ?? revealedKeys.has(key.id)
-                                                            ? key.apiKey
-                                                            : `${key.apiKey.slice(0,12)}`}
+                                                        {revealedKeys.has(key.id)
+                                                            ? key.apikey
+                                                            : `${key.apikey.slice(0, 12)}${"•".repeat(8)}`}
                                                     </code>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon-sm"
-                                                        className="opacity-0 group-hover:opacity-100 transition-opacity text-white"
+                                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
                                                         onClick={() => toggleReveal(key.id)}
                                                     >
                                                         {revealedKeys.has(key.id) ? (
@@ -263,7 +289,7 @@ export function ApiKeys() {
                                                         variant="ghost"
                                                         size="icon-sm"
                                                         className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                                        onClick={() => copyToClipboard(key.apiKey, key.id)}
+                                                        onClick={() => copyToClipboard(key.apikey, key.id)}
                                                     >
                                                         {copiedId === key.id ? (
                                                             <CheckCircle2 className="size-3 text-emerald-400" />
@@ -276,21 +302,21 @@ export function ApiKeys() {
                                             <td className="px-4 py-3">
                                                 <span
                                                     className={`inline-flex items-center gap-1.5 text-xs font-medium ${
-                                                        key.disabled
+                                                        key.disbaled
                                                             ? "text-muted-foreground"
                                                             : "text-emerald-400"
                                                     }`}
                                                 >
                                                     <span
                                                         className={`size-1.5 rounded-full ${
-                                                            key.disabled ? "bg-muted-foreground" : "bg-emerald-400"
+                                                            key.disbaled ? "bg-muted-foreground" : "bg-emerald-400"
                                                         }`}
                                                     />
-                                                    {key.disabled ? "Disabled" : "Active"}
+                                                    {key.disbaled ? "Disabled" : "Active"}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-right tabular-nums">
-                                                {(key.credisConsumed ?? 0).toLocaleString()}
+                                                {(key.creditUsed ?? 0).toLocaleString()}
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center justify-end gap-1">
@@ -300,13 +326,13 @@ export function ApiKeys() {
                                                         onClick={() =>
                                                             toggleMutation.mutate({
                                                                 id: key.id,
-                                                                disabled: !key.disabled,
+                                                                disabled: !key.disbaled,
                                                             })
                                                         }
                                                         disabled={toggleMutation.isPending}
-                                                        title={key.disabled ? "Enable key" : "Disable key"}
+                                                        title={key.disbaled ? "Enable key" : "Disable key"}
                                                     >
-                                                        {key.disabled ? (
+                                                        {key.disbaled ? (
                                                             <ToggleLeft className="size-4 text-muted-foreground" />
                                                         ) : (
                                                             <ToggleRight className="size-4 text-emerald-400" />
@@ -326,6 +352,7 @@ export function ApiKeys() {
                                         </tr>
                                     ))}
                                 </tbody>
+                                
                             </table>
                         </div>
                     )}
