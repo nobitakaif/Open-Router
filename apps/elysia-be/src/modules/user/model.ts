@@ -27,4 +27,12 @@ export namespace AuthModel {
         msg : t.String()
     })
     export type AuthFaild = typeof authFailed.static
+
+    export const profileResponseSchema = t.Object({
+        credits: t.Number()
+    })
+
+    export const profileResponseErrorSchema = t.Object({
+        message: t.Literal("Error while fetching user details")
+    })
 }

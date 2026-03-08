@@ -61,4 +61,15 @@ export abstract class Auth{
         }
 
     }
+
+    static async getUserDetails(id: string) {
+        return prisma.user.findFirst({
+            where: {
+                id 
+            },
+            select: {
+                credits: true
+            }
+        })
+    }
 }

@@ -11,6 +11,7 @@ import { Signup } from "./pages/signup";
 import { Button } from "./components/ui/button";
 import "./index.css"
 import { ApiKeys } from "./pages/api-keys";
+import { Credits } from "./pages/credits";
 
 const client = treaty<App>('localhost:8000', {
   fetch : {
@@ -32,6 +33,7 @@ export function App() {
           <Route path="/signin" element={<Signin/>}/>
           <Route path="/signup" element={<Signup/>}/>
           <Route path="api-keys" element={<ApiKeys/>}/>
+          <Route path="credits" element={<Credits/>}/>
           {/* <Route path="*" element={<NotFound/>}/> */}
         </Routes>  
       </BrowserRouter>
