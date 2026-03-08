@@ -12,10 +12,16 @@ import {
     ArrowRight,
     Loader2,
     Layers,
+    Eye,
+    Copy,
+    Check,
 } from "lucide-react";
+import { useState } from "react";
+import { ApiKeyText } from "@/components/apikeyText";
 
 export function Dashboard() {
     const elysiaClient = useElysiaClient();
+    const [copiedKey, setCopiedKey] = useState<string | null>(null)
 
     const apiKeysQuery = useQuery({
         queryKey: ["api-keys"],
@@ -189,9 +195,9 @@ export function Dashboard() {
                                 <tbody>
                                     {apiKeys.slice(0, 5).map((key) => (
                                         <tr key={key.id} className="border-b border-border/30 last:border-0">
-                                            <td className="px-4 py-3 font-medium">{key.name}</td>
-                                            <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                                                {key.apikey.slice(0, 12)}...{key.apikey.slice(-4)}
+                                            <td className="px-4 py-3  font-medium text-white">{key.name}</td>
+                                            <td className=" flex gap-4 px-4 py-3 font-mono text-xs text-muted-foreground items-center ">                                                                                           <ApiKeyText apiKey={key?.apikey} copiedKey={copiedKey} setCopiedKey={setCopiedKey}/>
+
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span
@@ -209,7 +215,7 @@ export function Dashboard() {
                                                     {key.disbaled ? "Disabled" : "Active"}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-right tabular-nums">
+                                            <td className="px-4 py-3 text-right tabular-nums text-white">
                                                 {(key.creditUsed ?? 0).toLocaleString()}
                                             </td>
                                         </tr>

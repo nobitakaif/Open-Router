@@ -265,7 +265,7 @@ export function ApiKeys() {
                                     <tbody>
                                     {apiKeys.map((key) => (
                                         <tr key={key.id} className="border-b border-border/30 last:border-0 group">
-                                            <td className="px-4 py-3 font-medium">{key.name}</td>
+                                            <td className="px-4 py-3 font-medium text-white">{key.name}</td>
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-1.5">
                                                     <code className="font-mono text-xs text-muted-foreground">
@@ -276,19 +276,19 @@ export function ApiKeys() {
                                                     <Button
                                                         variant="ghost"
                                                         size="icon-sm"
-                                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        className="text-white"
                                                         onClick={() => toggleReveal(key.id)}
                                                     >
                                                         {revealedKeys.has(key.id) ? (
-                                                            <EyeOff className="size-3" />
+                                                            <EyeOff size={14}/>
                                                         ) : (
-                                                            <Eye className="size-3" />
+                                                            <Eye size={14} />
                                                         )}
                                                     </Button>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon-sm"
-                                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        className="text-white"
                                                         onClick={() => copyToClipboard(key.apikey, key.id)}
                                                     >
                                                         {copiedId === key.id ? (
