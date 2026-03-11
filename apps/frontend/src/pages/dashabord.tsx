@@ -22,6 +22,7 @@ import { ApiKeyText } from "@/components/apikeyText";
 export function Dashboard() {
     const elysiaClient = useElysiaClient();
     const [copiedKey, setCopiedKey] = useState<string | null>(null)
+    const [showFullApiKey, setShowFullApiKey] = useState(5)
 
     const apiKeysQuery = useQuery({
         queryKey: ["api-keys"],
@@ -176,7 +177,7 @@ export function Dashboard() {
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-sm font-semibold">Your API Keys</h2>
                             <Button variant="ghost" size="sm" asChild>
-                                <Link to="/api-keys" className="text-xs">
+                                <Link to="/api-keys" className="text-xs text-white">
                                     View all
                                     <ArrowRight className="size-3" />
                                 </Link>

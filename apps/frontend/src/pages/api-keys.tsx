@@ -34,6 +34,7 @@ export function ApiKeys() {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [revealedKeys, setRevealedKeys] = useState<Set<string>>(new Set());
     const [getApi, setApikey] = useState<any>()
+    const [showNewlyCreatedApiKey, setShowNewlyCreatedApiKey] = useState(false)
 
     const apiKeysQuery = useQuery({
         queryKey: ["api-keys"],
@@ -53,13 +54,14 @@ export function ApiKeys() {
                 const errValue = response.error.value as { message?: string } | undefined;
                 throw new Error(errValue?.message || "Failed to create API key");
             }
-            setNewlyCreatedKey(response.data.id)
             return response.data;
         },
         onSuccess: (data:any) => {
-            console.log("new created key -> ",data.id)
-            setNewlyCreatedKey(data.apiKey);
-            console.log("newly created key ", newlyCreatedKey)
+            console.log("new created id -> ",data.id)
+            setNewlyCreatedKey(data.apikey);
+            setShowNewlyCreatedApiKey(true)
+            setTimeout(()=>{setShowNewlyCreatedApiKey(false)},4000)
+            console.log("newly created key ", data.apikey)
             if (nameRef.current) nameRef.current.value = "";
             queryClient.invalidateQueries({ queryKey: ["api-keys"] });
         },
@@ -187,7 +189,7 @@ export function ApiKeys() {
                             </Button>
                         </form>
 
-                        {newlyCreatedKey && (
+                        {showNewlyCreatedApiKey && (
                             <div className="flex items-start gap-2.5 text-sm text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3.5 py-3 mt-4">
                                 <CheckCircle2 className="size-4 shrink-0 mt-0.5" />
                                 <div className="min-w-0 flex-1">
@@ -199,7 +201,12 @@ export function ApiKeys() {
                                         <Button
                                             variant="ghost"
                                             size="icon-sm"
-                                            onClick={() => copyToClipboard(newlyCreatedKey, "new")}
+                                            onClick={() => {
+                                                copyToClipboard(newlyCreatedKey!, "new")
+                                                setTimeout(()=>{
+                                                    setShowNewlyCreatedApiKey(false)
+                                                },1000)
+                                            }}
                                         >
                                             {copiedId === "new" ? (
                                                 <CheckCircle2 className="size-3.5" />
@@ -211,7 +218,7 @@ export function ApiKeys() {
                                 </div>
                             </div>
                         )}
-
+                        
                         {createMutation.isError && (
                             <div className="flex items-start gap-2.5 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3.5 py-3 mt-4">
                                 <AlertCircle className="size-4 shrink-0 mt-0.5" />
@@ -315,7 +322,7 @@ export function ApiKeys() {
                                                     {key.disbaled ? "Disabled" : "Active"}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-right tabular-nums">
+                                            <td className="px-4 py-3 text-right tabular-nums text-white">
                                                 {(key.creditUsed ?? 0).toLocaleString()}
                                             </td>
                                             <td className="px-4 py-3">
